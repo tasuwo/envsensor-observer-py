@@ -6,7 +6,7 @@ import datetime
 
 import str_util
 import ble
-
+import json
 
 # Env Senor (OMRON 2JCIE-BL01 Broadcaster) ####################################
 
@@ -284,6 +284,36 @@ class SensorBeacon:
             }
         ]
         client_influxdb.write_points(json_body)
+    
+    def send_awsiot(self, client_mqtt):
+        json_body = {
+            "measurement": conf.INFLUXDB_MEASUREMENT,
+            "gateway": self.gateway,
+            "sensor_type": self.sensor_type,
+            "bt_address": self.bt_address,
+            "temperature": self.val_temp,
+            "humidity": self.val_humi,
+            "light": self.val_light,
+            "uv": self.val_uv,
+            "pressure": self.val_pressure,
+            "noise": self.val_noise,
+            "di": self.val_di,
+            "heat": self.val_heat,
+            "accel_x": self.val_ax,
+            "accel_y": self.val_ay,
+            "accel_z": self.val_az,
+            "etvoc": self.val_etvoc,
+            "eco2": self.val_eco2,
+            "si": self.val_si,
+            "pga": self.val_pga,
+            "seismic": self.val_seismic,
+            "vibinfo": self.vibinfo,
+            "battery": self.val_battery,
+            "rssi": self.rssi,
+            "distance": self.distance,
+            "timestamp": conf.tick_last_update
+        }
+        client_mqtt.publish(conf.AWS_IOT_TOPIC, json.dumps(json_body), 0)
 
     def debug_print(self):
         print "\tgateway = ", self.gateway

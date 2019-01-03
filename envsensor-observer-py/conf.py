@@ -43,3 +43,14 @@ INFLUXDB_DATABASE = "xxxxxxxx"  # enter influxDB database name
 INFLUXDB_MEASUREMENT = "xxxxxxxx"  # enter measurement name
 INFLUXDB_USER = "root"  # enter influxDB username
 INFLUXDB_PASSWORD = "root"  # enter influxDB user password
+
+
+# send data to AWS IoT
+AWS_IOT_OUTPUT = False
+AWS_IOT_ENDPOINT = "random.iot.region.amazonaws.com"
+AWS_IOT_CERTIFICATE_PATH = "PATH/TO/CERTIFICATE"
+AWS_IOT_PRIVATE_KEY_PATH = "PATH/TO/PRIVATE_KEY"
+AWS_IOT_ROOT_CA_PATH = "PATH/TO/ROOT_CA"
+AWS_IOT_CLIENT_ID = ""
+AWS_IOT_THING_NAME = ""
+AWS_IOT_TOPIC = ""

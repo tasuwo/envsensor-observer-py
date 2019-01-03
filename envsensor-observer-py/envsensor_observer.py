@@ -34,6 +34,8 @@ if conf.FLUENTD_FORWARD:
     from fluent import event
 if conf.INFLUXDB_OUTPUT:
     from influxdb import InfluxDBClient
+if conf.AWS_IOT_OUTPUT:
+    from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 # constant
 VER = 1.2
@@ -43,6 +45,7 @@ GATEWAY = socket.gethostname()
 
 # Global variables
 influx_client = None
+mqtt_client = None
 sensor_list = []
 flag_update_sensor_status = False
 
@@ -144,6 +147,8 @@ def handling_data(sensor):
         sensor.forward_fluentd(event)
     if conf.CSV_OUTPUT:
         log.info(sensor.csv_format())
+    if conf.AWS_IOT_OUTPUT:
+        sensor.send_awsiot(mqtt_client)
 
 
 # check timeout sensor and update flag
@@ -315,6 +320,19 @@ if __name__ == "__main__":
                     print "-- initialize csv logger : success"
         except Exception as e:
             print "error initializing csv output interface"
+            print str(e)
+            sys.exit(1)
+        
+        try:
+            if conf.AWS_IOT_OUTPUT:
+                if debug:
+                    print "-- initialize aws iot device"
+                mqtt_client= AWSIoTMQTTClient(conf.AWS_IOT_CLIENT_ID)
+                mqtt_client.configureEndpoint(conf.AWS_IOT_ENDPOINT, 8883)
+                mqtt_client.configureCredentials(conf.AWS_IOT_ROOT_CA_PATH, conf.AWS_IOT_PRIVATE_KEY_PATH, conf.AWS_IOT_CERTIFICATE_PATH)
+                mqtt_client.connect()
+        except Exception as e:
+            print "error initializing mqtt client for aws iot"
             print str(e)
             sys.exit(1)
 
