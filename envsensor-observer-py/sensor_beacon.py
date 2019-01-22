@@ -311,7 +311,6 @@ class SensorBeacon:
             "battery": self.val_battery,
             "rssi": self.rssi,
             "distance": self.distance,
-            "timestamp": conf.tick_last_update
         }
         client_mqtt.publish(conf.AWS_IOT_TOPIC, json.dumps(json_body), 0)
 
