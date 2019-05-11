@@ -284,10 +284,9 @@ class SensorBeacon:
             }
         ]
         client_influxdb.write_points(json_body)
-    
+
     def send_awsiot(self, client_mqtt):
         json_body = {
-            "measurement": conf.INFLUXDB_MEASUREMENT,
             "gateway": self.gateway,
             "sensor_type": self.sensor_type,
             "bt_address": self.bt_address,
