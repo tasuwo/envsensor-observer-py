@@ -45,6 +45,12 @@ INFLUXDB_USER = "root"  # enter influxDB username
 INFLUXDB_PASSWORD = "root"  # enter influxDB user password
 
 
+# uploading data to the cloud (required timescaleDB)
+TIMESCALEDB_OUTPUT = True
+# timescaleDB
+TIMESCALEDB_DSN = "postgresql://postgres:pw@xxx.xxx.xxx.xxx:5432/postgres"
+
+
 # send data to AWS IoT
 AWS_IOT_OUTPUT = False
 AWS_IOT_ENDPOINT = "random.iot.region.amazonaws.com"

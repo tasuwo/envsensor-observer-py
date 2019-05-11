@@ -8,6 +8,9 @@ import str_util
 import ble
 import json
 
+if conf.TIMESCALEDB_OUTPUT:
+    import psycopg2
+
 # Env Senor (OMRON 2JCIE-BL01 Broadcaster) ####################################
 
 class SensorBeacon:
@@ -284,6 +287,14 @@ class SensorBeacon:
             }
         ]
         client_influxdb.write_points(json_body)
+
+    def upload_timescaledb(self, dns):
+        # direct data upload to timescaleDB
+        with psycopg2.connect(dns) as conn:
+            with conn.cursor() as cur:
+                cur.execute("INSERT INTO conditions(time, noise, temperature, di, light, uv, humidity, pressure, heat, rssi, battery) VALUES (NOW(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    (self.val_noise, self.val_temp, self.val_di, self.val_light, self.val_uv, self.val_humi, self.val_pressure, self.val_heat, self.rssi, self.val_battery))
+            conn.commit()
 
     def send_awsiot(self, client_mqtt):
         json_body = {

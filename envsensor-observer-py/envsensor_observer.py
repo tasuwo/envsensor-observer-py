@@ -143,6 +143,8 @@ def parse_events(sock, loop_count=10):
 def handling_data(sensor):
     if conf.INFLUXDB_OUTPUT:
         sensor.upload_influxdb(influx_client)
+    if conf.TIMESCALEDB_OUTPUT:
+        sensor.upload_timescaledb(conf.TIMESCALEDB_DSN)
     if conf.FLUENTD_FORWARD:
         sensor.forward_fluentd(event)
     if conf.CSV_OUTPUT:
@@ -322,7 +324,7 @@ if __name__ == "__main__":
             print "error initializing csv output interface"
             print str(e)
             sys.exit(1)
-        
+
         try:
             if conf.AWS_IOT_OUTPUT:
                 if debug:
